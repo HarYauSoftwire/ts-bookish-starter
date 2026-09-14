@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 
+import sql from '../db';
+
 class BookController {
     router: Router;
 
@@ -18,12 +20,64 @@ class BookController {
         });
     }
 
-    createBook(req: Request, res: Response) {
-        // TODO: implement functionality
-        return res.status(500).json({
-            error: 'server_error',
-            error_description: 'Endpoint not implemented yet.',
-        });
+    async createBook(req: Request, res: Response) {
+        const { title, author, isbn, copies } = req.body;
+
+        if (typeof title !== 'string' || title.trim() === '') {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'title is required and must be a non-empty string.',
+            });
+        }
+        if (title.length > 255) {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'title must be at most 255 characters long.',
+            });
+        }
+
+        if (typeof author !== 'string' || author.trim() === '') {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'author is required and must be a non-empty string.',
+            });
+        }
+        if (author.length > 255) {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'author must be at most 255 characters long.',
+            });
+        }
+
+        if (typeof isbn !== 'string' || isbn.trim() === '') {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'isbn is required and must be a non-empty string.',
+            });
+        }
+        if (isbn.length > 255) {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'isbn must be at most 255 characters long.',
+            });
+        }
+
+        const parsedCopies = Number(copies);
+        if (!Number.isInteger(parsedCopies) || parsedCopies < 0) {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'copies is required and must be a non-negative integer.',
+            });
+        }
+
+        const book = await sql`
+            INSERT INTO Books
+                (Title, Author, ISBN, Copies)
+            VALUES
+                (${ title },  ${ author }, ${ isbn }, ${ parsedCopies })
+            RETURNING *;
+        `;
+        return res.status(201).json(book)
     }
 }
 
