@@ -7,9 +7,17 @@ class BookController {
 
     constructor() {
         this.router = Router();
+        this.router.get('/', this.getAllBooks.bind(this));
         this.router.get('/:id', this.getBook.bind(this));
 
         this.router.post('/', this.createBook.bind(this));
+    }
+
+    async getAllBooks(req: Request, res: Response) {
+        const books = await sql`
+            SELECT * FROM Books;
+        `
+        return res.status(200).json(books);
     }
 
     getBook(req: Request, res: Response) {
