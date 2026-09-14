@@ -20,12 +20,25 @@ class BookController {
         return res.status(200).json(books);
     }
 
-    getBook(req: Request, res: Response) {
-        // TODO: implement functionality
-        return res.status(500).json({
-            error: 'server_error',
-            error_description: 'Endpoint not implemented yet.',
-        });
+    async getBook(req: Request, res: Response) {
+        const parsedId = Number(req.params.id);
+        if (!Number.isInteger(parsedId) || parsedId < 0) {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'id is required and must be a non-negative integer.',
+            });
+        }
+        const book = await sql`
+            SELECT * FROM Books WHERE BookId = ${ req.params.id };
+        `
+        if (book.length == 1) {
+            return res.status(200).json(book[0]);
+        } else {
+            return res.status(404).json({
+                error: 'not_found',
+                error_description: 'No book found with the given id.',
+            });
+        }
     }
 
     async createBook(req: Request, res: Response) {
