@@ -4,6 +4,7 @@ import 'dotenv/config';
 import healthcheckRoutes from './controllers/healthcheckController';
 import bookRoutes from './controllers/bookController';
 import userRoutes from './controllers/userController';
+import searchRoutes from './controllers/searchController';
 
 const port = process.env['PORT'] || 3000;
 
@@ -19,3 +20,4 @@ app.listen(port, () => {
 app.use('/healthcheck', healthcheckRoutes);
 app.use('/books', bookRoutes);
 app.use('/users', userRoutes);
+app.use('/search', searchRoutes);
