@@ -2,6 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 
 import healthcheckRoutes from './controllers/healthcheckController';
+import loginRoutes from './controllers/loginController';
 import bookRoutes from './controllers/bookController';
 import userRoutes from './controllers/userController';
 import searchRoutes from './controllers/searchController';
@@ -19,6 +20,7 @@ app.listen(port, () => {
  * Primary app routes.
  */
 app.use('/healthcheck', healthcheckRoutes);
+app.use('/login', loginRoutes);
 app.use('/books', bookRoutes);
 app.use('/users', userRoutes);
 app.use('/search', searchRoutes);
