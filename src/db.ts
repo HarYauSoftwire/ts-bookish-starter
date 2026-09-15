@@ -7,6 +7,7 @@ const sql = postgres({
     database: "bookish",
     username: process.env["POSTGRES_USERNAME"],
     password: process.env["POSTGRES_PASSWORD"],
+    debug: (connection, query, params, types) => console.log({connection, query, params, types})
 })
 
 export default sql

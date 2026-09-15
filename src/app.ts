@@ -5,6 +5,7 @@ import healthcheckRoutes from './controllers/healthcheckController';
 import bookRoutes from './controllers/bookController';
 import userRoutes from './controllers/userController';
 import searchRoutes from './controllers/searchController';
+import borrowRoutes from './controllers/borrowController';
 
 const port = process.env['PORT'] || 3000;
 
@@ -21,3 +22,4 @@ app.use('/healthcheck', healthcheckRoutes);
 app.use('/books', bookRoutes);
 app.use('/users', userRoutes);
 app.use('/search', searchRoutes);
+app.use('/borrow', borrowRoutes);
