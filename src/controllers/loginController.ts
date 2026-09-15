@@ -10,11 +10,38 @@ class LoginController {
 
     constructor() {
         this.router = Router();
-        this.router.get('/:username/:password', this.login.bind(this));
+        this.router.post('/', this.login.bind(this));
     }
 
-    async login(req: Request<{ username: string, password: string }>, res: Response) {
-        const { username, password } = req.params;
+    async login(req: Request, res: Response) {
+        const { username, password } = req.body;
+
+        if (typeof username !== 'string' || username.trim() === '') {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'username is required and must be a non-empty string.',
+            });
+        }
+        if (username.length > 255) {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'username must be at most 255 characters long.',
+            });
+        }
+
+        if (typeof password !== 'string' || password.trim() === '') {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'password is required and must be a non-empty string.',
+            });
+        }
+        if (password.length > 255) {
+            return res.status(400).json({
+                error: 'invalid_request',
+                error_description: 'password must be at most 255 characters long.',
+            });
+        }
+
         const dbUser = await sql`
             SELECT UserName FROM DBUsers WHERE UserName = ${ username } AND UserPassword = ${ password };
         `
